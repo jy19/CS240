@@ -1,0 +1,11 @@
+package views;
+
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+
+public class FieldsPanel extends JPanel{
+	private JLabel fieldsLabel;
+	private JList fieldsList;
+	
+}

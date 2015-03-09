@@ -1,0 +1,30 @@
+package views;
+
+import java.awt.BorderLayout;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+@SuppressWarnings("serial")
+public class LoginPanel extends JPanel{
+	private JTextField userField;
+	private JTextField passwordField;
+	private JTextField hostField;
+	private JTextField portField;
+	
+	public LoginPanel(){
+		JLabel userLabel = new JLabel("Username: ");
+		JLabel passwordLabel = new JLabel("Password: ");
+		JLabel hostLabel = new JLabel("Host: ");
+		JLabel portLabel = new JLabel("Port: ");
+		
+		userField = new JTextField();
+		passwordField = new JTextField();
+		hostField = new JTextField();
+		portField = new JTextField();
+		
+		this.setLayout(new BorderLayout());
+		//this.add()
+	}
+}

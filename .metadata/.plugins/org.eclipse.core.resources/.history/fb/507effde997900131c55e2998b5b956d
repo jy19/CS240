@@ -1,0 +1,156 @@
+import java.io.*;
+import java.util.*;
+
+
+public class ImageEditor {
+
+	public static void main(String[] args) throws IOException {
+		File input = new File(args[0]);
+		File output = new File(args[1]);
+		String transtype = args[2];
+		
+		GetImage image = new GetImage(input, output, transtype);
+		image.copy();
+		
+	}
+
+}
+
+class GetImage{
+	
+	private File input;
+	private File output;
+	private String transtype;
+	
+	public GetImage(File input, File output, String transtype){
+		this.input = input;
+		this.output = output;
+		this.transtype = transtype;
+	}
+	
+	public void copy() throws IOException{
+		Scanner scanner = new Scanner(input).useDelimiter("(\\s)|(#[^\\n]*\\n)+");
+		PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(output)));
+		
+		String p3 = scanner.next();
+		String comment = scanner.next();
+		int width = scanner.nextInt();
+		int height = scanner.nextInt();
+		int maxvalue = scanner.nextInt();
+		
+		Pixel[][] imageArray = new Pixel[width][height];
+		Pixel[][] changedArray = new Pixel[width][height];
+		
+		for(int i = 0; i < width; i++){
+			for(int j = 0; j < height; j++){
+				Pixel p = new Pixel(scanner.nextInt(), scanner.nextInt(), scanner.nextInt());
+				imageArray[i][j] = p;
+			}
+		}
+		scanner.close();
+		//printTest(width, height, imageArray);
+		switch(transtype.toLowerCase()){
+		case "invert":
+			changedArray = invert(width, height, imageArray);
+			printChanged(width, height, changedArray, writer, p3, comment, maxvalue);
+			break;
+		case "grayscale":
+			grayscale(width, height);
+			break;
+		case "emboss":
+			emboss();
+			break;
+		case "motionblur":
+			motionblur();
+			break;
+		}
+		
+		writer.close();
+	}
+	
+	public void printChanged(int width, int height, Pixel[][] printing, PrintWriter writer, String p3, String comment, int maxvalue){
+		writer.println(p3);
+		writer.println(comment);
+		writer.println(width);
+		writer.println(height);
+		writer.println(maxvalue);
+		for(int i = 0; i < width; i++){
+			for(int j = 0; j < height; j++){
+				writer.println(printing[i][j]);
+			}
+		}
+	}
+	
+	public Pixel[][] invert(int width, int height, Pixel[][] imageArray) {
+		Pixel[][] changedArray = new Pixel[width][height];
+		for(int i = 0; i < width; i++){
+			for(int j = 0; j < height; j++){
+				int invRed = Math.abs(imageArray[i][j].getRed() - 255);
+				int invGreen = Math.abs(imageArray[i][j].getGreen() - 255);
+				int invBlue = Math.abs(imageArray[i][j].getBlue() - 255);
+				Pixel invP = new Pixel(invRed, invGreen, invBlue);
+				changedArray[i][j] = invP;
+			}
+		}
+		return changedArray;
+	}
+	public void grayscale(int width, int height) {
+		
+	}
+
+	public void emboss() {
+		
+	}
+	public void motionblur() {
+		
+	}
+	
+	/*public void printTest(int width, int height, Pixel[][] imageArray){
+		   for(int i = 0; i < width; i++)
+		   {
+		      for(int j = 0; j < height; j++)
+		      {
+		         System.out.printf("%d",imageArray[i][j].getRed());
+		      }
+		      System.out.println();
+		   }
+	}*/
+}
+
+
+class Pixel{
+	private int red;
+	private int green;
+	private int blue;
+	
+	public Pixel(int red, int green, int blue){
+		this.setRed(red);
+		this.setGreen(green);
+		this.setBlue(blue);
+	}
+
+	public int getRed() {
+		return red;
+	}
+
+	public void setRed(int red) {
+		this.red = red;
+	}
+
+	public int getGreen() {
+		return green;
+	}
+
+	public void setGreen(int green) {
+		this.green = green;
+	}
+
+	public int getBlue() {
+		return blue;
+	}
+
+	public void setBlue(int blue) {
+		this.blue = blue;
+	}
+	
+}

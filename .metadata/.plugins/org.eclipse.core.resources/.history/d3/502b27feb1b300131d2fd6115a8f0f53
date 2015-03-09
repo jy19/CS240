@@ -1,0 +1,38 @@
+package views;
+
+import java.awt.BorderLayout;
+import java.util.ArrayList;
+
+import javax.swing.DefaultListModel;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+
+import shared.model.Field;
+
+public class FieldsPanel extends JPanel{
+	private JLabel fieldsLabel;
+	private JList<Field> fieldsList;
+	
+	public FieldsPanel(){
+		fieldsLabel = new JLabel("Fields");
+		fieldsList =  new JList<Field>();
+		
+		this.setLayout(new BorderLayout());
+		this.add(fieldsLabel, BorderLayout.NORTH);
+		this.add(fieldsList, BorderLayout.CENTER);
+	}
+	
+	public void populateFields(ArrayList<Field> fields){
+		DefaultListModel<Field> list = new DefaultListModel();
+		for(Field field: fields){
+			list.addElement(field);
+		}
+		
+		fieldsList = new JList<Field>(list);
+	}
+	
+	public JList<Field> getFieldsList(){
+		return fieldsList;
+	}
+}

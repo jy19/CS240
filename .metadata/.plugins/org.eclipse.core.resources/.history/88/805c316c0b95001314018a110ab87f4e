@@ -1,0 +1,59 @@
+package server.database;
+import shared.model.*;
+
+import java.awt.List;
+import java.util.ArrayList;
+import java.util.logging.Logger;
+
+public class UserDAO {
+private static Logger logger;
+	
+	static {
+		logger = Logger.getLogger("contactmanager");
+	}
+
+	private Database db;
+	
+	UserDAO(Database db) {
+		this.db = db;
+	}
+	
+	public ArrayList<Users> getAll() {
+		
+		logger.entering("server.database.ContactsDAO", "getAll");
+	
+		// TODO: Use db's connection to query all contacts from the database and return them	
+		
+		logger.exiting("server.database.ContactsDAO", "getAll");
+		
+		return null;	
+	}
+	
+	public void add(Users user) {
+
+		logger.entering("server.database.ContactsDAO", "add");
+	
+		// TODO: Use db's connection to add a new contact to the database
+		
+		logger.exiting("server.database.ContactsDAO", "add");
+	}
+	
+	public void update(Users user) {
+
+		logger.entering("server.database.ContactsDAO", "update");
+	
+		// TODO: Use db's connection to update contact in the database
+		
+		logger.exiting("server.database.ContactsDAO", "update");
+	}
+	
+	public void delete(Users user) {
+
+		logger.entering("server.database.ContactsDAO", "delete");
+	
+		// TODO: Use db's connection to delete contact from the database
+		
+		logger.exiting("server.database.ContactsDAO", "delete");
+	}
+
+}

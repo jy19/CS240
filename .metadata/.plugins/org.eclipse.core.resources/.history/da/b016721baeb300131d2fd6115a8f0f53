@@ -1,0 +1,25 @@
+package views;
+
+import java.awt.BorderLayout;
+
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+
+public class FieldsPanel extends JPanel{
+	private JLabel fieldsLabel;
+	private JList<String> fieldsList;
+	
+	public FieldsPanel(){
+		fieldsLabel = new JLabel("Fields");
+		fieldsList =  new JList<String>();
+		
+		this.setLayout(new BorderLayout());
+		this.add(fieldsLabel, BorderLayout.NORTH);
+		this.add(fieldsList, BorderLayout.CENTER);
+	}
+	
+	public void populateFields(){
+		
+	}
+}

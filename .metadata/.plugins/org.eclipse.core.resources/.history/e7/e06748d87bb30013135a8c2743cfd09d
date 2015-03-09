@@ -1,0 +1,8 @@
+package views;
+
+import javax.swing.*;
+
+public class ImagePanel extends JPanel{
+	private JLabel imageLabel;
+	
+}

@@ -1,0 +1,57 @@
+package views;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import client.communication.ClientCommunicator;
+import shared.communication.ValidateUserIn;
+import shared.communication.ValidateUserOut;
+
+@SuppressWarnings("serial")
+public class LoginPanel extends JPanel{
+	private LabelTextField userPanel;
+	private LabelTextField passwordPanel;
+	private JButton loginButton;
+	
+	
+	public LoginPanel(final ClientCommunicator communicator){
+		userPanel = new LabelTextField("Username: ", 50);
+		passwordPanel = new LabelTextField("Password: ", 50);
+		
+		loginButton = new JButton("Log In");
+		
+		loginButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ValidateUserIn input = new ValidateUserIn(userPanel.getText(), passwordPanel.getText());
+				ValidateUserOut output = communicator.validateUser(input);
+				System.out.println("Button Pressed!!");
+				
+			}
+			
+		});
+		
+		userPanel.setPreferredSize(new Dimension(100, 30));
+		passwordPanel.setPreferredSize(new Dimension(100, 30));
+		
+		this.setLayout(new BorderLayout());
+		this.add(userPanel, BorderLayout.NORTH);
+		this.add(passwordPanel, BorderLayout.SOUTH);
+		this.add(loginButton, BorderLayout.EAST);
+	}
+	
+	public String getUsername(){
+		return userPanel.getText();
+	}
+	public String getPassword(){
+		return passwordPanel.getText();
+	}
+}

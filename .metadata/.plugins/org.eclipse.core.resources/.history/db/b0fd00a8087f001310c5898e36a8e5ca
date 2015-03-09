@@ -1,0 +1,9 @@
+package spell;
+
+public class TrieObj {
+	public class Node{
+		int frequency;
+		Node[] nodeArray = new Node[26];
+		
+	}
+}

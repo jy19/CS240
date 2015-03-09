@@ -1,0 +1,24 @@
+package views;
+
+import java.awt.BorderLayout;
+import java.util.ArrayList;
+
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import shared.model.Project;
+
+public class ProjectsPanel extends JPanel{
+	private JLabel projectsLabel;
+	private JComboBox projectChoices;
+	
+	public ProjectsPanel(ArrayList<Project> projects){
+		projectsLabel = new JLabel("Projects: ");
+		projectChoices = new JComboBox(projects.toArray());
+		
+		this.setLayout(new BorderLayout());
+		this.add(projectsLabel, BorderLayout.WEST);
+		this.add(projectChoices, BorderLayout.CENTER);
+	}
+}

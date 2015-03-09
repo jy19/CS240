@@ -1,0 +1,17 @@
+package views;
+
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
+public class HostportPanel {
+	private JTextField hostField;
+	private JTextField portField;
+	
+	public HostportPanel(){
+		JLabel hostLabel = new JLabel("Host: ");
+		JLabel portLabel = new JLabel("Port: ");
+		
+		hostField = new JTextField();
+		portField = new JTextField();
+	}
+}

@@ -1,0 +1,14 @@
+package views;
+
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+public class ProjectsPanel extends JPanel{
+	private JLabel projectsLable;
+	private JComboBox projectChoices;
+	
+	public ProjectsPanel(){
+		
+	}
+}

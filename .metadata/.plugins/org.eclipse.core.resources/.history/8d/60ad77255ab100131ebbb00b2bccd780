@@ -1,0 +1,59 @@
+package views;
+
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+@SuppressWarnings("serial")
+public class SearchGUI extends JFrame{
+	private fieldsPanel fields;
+	private LoginPanel loginInfo;
+	private HostportPanel hostport;
+	private imagePanel sampleImage;
+	private projectsPanel projects;
+	private valuesPanel values;
+	
+	public SearchGUI(String title){
+		super(title);
+		
+		createComponents();
+	}
+	
+	
+	
+	private void createComponents(){
+		addWindowListener(windowAdapter);
+		
+		hostport = new HostportPanel();
+		
+		JPanel basePanel = new JPanel();
+		basePanel.setLayout(new BoxLayout(basePanel, BoxLayout.LINE_AXIS));
+		basePanel.add(hostport);
+		
+	}
+	
+	private WindowAdapter windowAdapter = new WindowAdapter() {
+	    	
+        public void windowClosing(WindowEvent e) {
+            System.exit(0);
+        }
+	};
+	public static void main(String[] args) {
+    	
+        EventQueue.invokeLater(new Runnable()
+        {
+           public void run()
+           {
+               SearchGUI frame = new SearchGUI("Search");
+               frame.pack();
+               frame.setSize(100, 100);
+               frame.setVisible(true);
+           }
+        });
+    }
+}

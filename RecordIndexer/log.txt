@@ -1,0 +1,6 @@
+Jun 09, 2014 5:00:44 PM server.Server run
+INFO: Initializing Database
+Jun 09, 2014 5:00:44 PM server.Server run
+INFO: Initializing HTTP Server
+Jun 09, 2014 5:00:44 PM server.Server run
+INFO: Starting HTTP Server

@@ -1,0 +1,85 @@
+package spell;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Set;
+
+public class SpellCorrectorObj implements SpellCorrector{
+	
+	TrieObj trie = new TrieObj();
+	Set<String> edit1 = new HashSet<String>();
+
+	public void useDictionary(String dictionaryFileName) throws FileNotFoundException {
+		String word;
+		File inputFile = new File(dictionaryFileName);
+		Scanner scan = new Scanner(inputFile);
+		while(scan.hasNext()){
+			word = scan.next().toLowerCase();
+			trie.add(word);
+		}
+		//System.out.print(trie.toString());
+		scan.close();
+	}
+
+	public String suggestSimilarWord(String inputWord) {
+		if(trie.find(inputWord) != null){
+			return inputWord;
+		}
+		//else{
+			
+		//}
+		return null;
+	}
+	
+	public void insertion(String word){
+		//String suggestion;
+		for(int i = 0; i < word.length() + 1; i++){
+			for(char c = 'a'; c <= 'z'; c++){
+				StringBuilder sb = new StringBuilder(word);
+				sb.insert(c, i);
+				String sbword = sb.toString();
+				//if(trie.find(sbword) != null){
+					
+				//}
+				//add to a set of edit distance 1s
+				//if set find null, go edit distance 2? with set
+			}
+		}
+	}
+	
+	public void deletion(String word){
+		for(int i = 0; i < word.length(); i++){
+			StringBuilder sb = new StringBuilder(word);
+			sb.deleteCharAt(i);
+			//check if word in trie
+			//add to a set if there
+		}
+	}
+	
+	public void transposition(String word){
+		char[] c = word.toCharArray();
+		for (int i = 0; i < word.length()-1; i++){
+			char temp = c[i];
+			c[i] = c[i+1];
+			c[i+1] = temp;
+			String transposed = new String(c);
+			//check if word in trie
+			//add word to set if there
+		}
+	}
+	
+	public void alteration(String word){
+		char[] alterString = word.toCharArray();
+		for(int i = 0; i < word.length(); i++){
+			for(char c = 'a'; c <= 'z'; c++){
+				alterString[i] = c;
+				String altered = new String(alterString);
+				//check if word in trie
+				//etc
+			}
+		}
+	}
+
+}

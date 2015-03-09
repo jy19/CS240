@@ -1,0 +1,94 @@
+package importer;
+
+import java.io.*;
+
+import javax.xml.parsers.*;
+
+import org.w3c.dom.*;
+
+import server.database.Database;
+import shared.model.User;
+
+public class DOMParser{
+	
+	private static Database database = new Database();
+	private static int projectID; 
+	private static int imageID;
+	//private static int userID;
+
+	public static void main(String [] args) throws Exception {
+
+		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+
+		File xmlInputFile = new File("Records.xml");
+		Document doc = builder.parse(xmlInputFile);
+
+		projectID = 0;
+		imageID = 0;
+		//userID = 0;
+
+		NodeList usersList = doc.getElementsByTagName("user");
+		parseUsers(usersList);
+		NodeList projectsList = doc.getElementsByTagName("project");
+		parseUsers(projectsList);
+
+	}
+
+	//need clear database method
+
+	public static void parseUsers(NodeList usersList){
+		for(int i = 0; i < usersList.getLength(); i++){
+
+			Element userElem = (Element) usersList.item(i);
+
+			Element usernameElem = (Element) userElem.getElementsByTagName("username").item(0);
+			Element passwordElem = (Element) userElem.getElementsByTagName("password").item(0);
+			Element firstnameElem = (Element) userElem.getElementsByTagName("firstname").item(0);
+			Element lastnameElem = (Element) userElem.getElementsByTagName("lastname").item(0);
+			Element emailElem = (Element) userElem.getElementsByTagName("email").item(0);
+			Element indexedRecordsElem = (Element) userElem.getElementsByTagName("indexedrecords").item(0);
+
+			String username = usernameElem.getTextContent();
+			String password = passwordElem.getTextContent();
+			String firstname = firstnameElem.getTextContent();
+			String lastname = lastnameElem.getTextContent();
+			String email = emailElem.getTextContent();
+			int indexedRecords = Integer.parseInt(indexedRecordsElem.getTextContent());
+			
+			User user = new User(username, password, firstname, lastname, email, indexedRecords, -1, -1);
+			database.getUserDAO().add(user);
+		}
+	}
+
+	public static void parseProjects(NodeList projectsList){
+		for(int i = 0; i < projectsList.getLength(); i++){
+			Element projectElem = (Element) projectsList.item(i);
+
+			Element titleElem = (Element) projectElem.getElementsByTagName("title").item(0);
+			Element recordsperimageElem = (Element) projectElem.getElementsByTagName("recordsperimage").item(0);
+			Element firstycoordElem = (Element) projectElem.getElementsByTagName("firstycoord").item(0);
+			Element recordheightElem =  (Element) projectElem.getElementsByTagName("recordheight").item(0);
+
+			String title = titleElem.getTextContent();
+			int recordsperimage = Integer.parseInt(recordsperimageElem.getTextContent());
+			int firstycoord = Integer.parseInt(firstycoordElem.getTextContent());
+			int recordheight = Integer.parseInt(recordheightElem.getTextContent());
+
+			//create project object and add to database?
+			//project ID needed? 
+			//projectID++;
+			//parse fields
+			Element fieldElem = (Element) projectElem.getElementsByTagName("field").item(0);
+			if(fieldElem != null){
+				NodeList fieldsList = projectElem.getElementsByTagName("field");
+				//parseFields, pass in fieldslist
+			}
+
+			// parse images: Element batchElem = (Element) projectElem.getElementsByTagName("").item(0);
+
+			//parse images
+		}
+	}
+
+	//parse projects --calls parseFields, parse images -- parseimages call parseRvalues?
+}

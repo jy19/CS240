@@ -1,0 +1,57 @@
+drop table if exists users;
+drop table if exists projects;
+drop table if exists fields;
+drop table if exists images;
+drop table if exists rvalues;
+
+
+CREATE TABLE users
+(	
+	username TEXT NOT NULL UNIQUE,
+	password TEXT NOT NULL,
+	firstname TEXT NOT NULL,
+	lastname TEXT NOT NULL,
+	email TEXT NOT NULL,
+	indexrecords INTEGER NOT NULL DEFAULT 0,
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	image_id INTEGER NOT NULL DEFAULT -1
+);
+
+CREATE TABLE projects
+(	
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	title TEXT NOT NULL,
+	recordsperimage INTEGER NOT NULL,
+	firstycoord INTEGER NOT NULL,
+	recordheight INTEGER NOT NULL
+);
+
+CREATE TABLE fields
+(	
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	title TEXT NOT NULL,
+	xcoordinate INTEGER NOT NULL,
+	width INTEGER NOT NULL,
+	helphtml TEXT NOT NULL,
+	knowndata TEXT NOT NULL,
+	project_id INTENGER NOT NULL,
+	field_num INTEGER NOT NULL
+);
+
+CREATE TABLE images
+(
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	file TEXT NOT NULL,
+	project_id INTEGER NOT NULL,
+	current_state INTEGER NOT NULL,
+	user_id INTEGER NOT NULL
+);
+
+CREATE TABLE rvalues
+(
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	row_num INTEGER NOT NULL,
+	field_id INTEGER NOT NULL,
+	image_id INTEGER NOT NULL,
+	rvalue TEXT NOT NULL
+);

@@ -1,0 +1,40 @@
+import java.util.HashSet;
+import java.util.Scanner;
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		HashSet<String> matched = new HashSet<String>();
+		String inputword = sc.nextLine();
+		int[] inputArray = createArray(inputword);
+		System.out.println(inputArray);
+		while(sc.hasNextLine()){
+			String current = sc.nextLine();
+			if(current.equals(inputword)){
+				continue;
+			}
+			else if(current.length() > inputword.length()){
+				continue;
+			}
+			else{
+				
+			}
+		}
+
+	}
+	
+	public static int[] createArray(String word){
+		int [] countArray = new int [26];
+		for(int i = 0; i < word.length(); i++){
+			countArray[word.charAt(i) - 'a']++;
+		}
+		return countArray;
+	}
+	
+	public static boolean isSubAnagram(int[] inputwordarr, int[] currentarr){
+		return false;
+	}
+
+}

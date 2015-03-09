@@ -1,0 +1,18 @@
+import java.io.*;
+import java.util.*;
+
+
+public class ImageEditor {
+
+	public static void main(String[] args) throws IOException {
+		File input = new File(args[0]);
+		File output = new File(args[1]);
+		String transtype = args[2];
+		
+		GetImage image = new GetImage(input, output, transtype);
+		image.copy();
+		
+	}
+
+}
+

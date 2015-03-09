@@ -1,0 +1,37 @@
+package views;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.util.ArrayList;
+
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import shared.model.Project;
+
+public class ProjectsPanel extends JPanel{
+	private JLabel projectsLabel;
+	private JComboBox<String> projectChoices;
+	
+	public ProjectsPanel(){
+		projectsLabel = new JLabel("Projects: ");
+		projectChoices = new JComboBox<String>();
+		projectChoices.setEditable(false);
+		
+		this.setPreferredSize(new Dimension(100, 30));
+		
+		this.setLayout(new BorderLayout());
+		this.add(projectsLabel, BorderLayout.WEST);
+		this.add(projectChoices, BorderLayout.CENTER);
+	}
+	
+	public void populateChoices(ArrayList<Project> projects){
+		for(Project project: projects){
+			projectChoices.addItem(project.getTitle());
+		}
+	}
+	public JComboBox<String> getChoices(){
+		return projectChoices;
+	}
+}

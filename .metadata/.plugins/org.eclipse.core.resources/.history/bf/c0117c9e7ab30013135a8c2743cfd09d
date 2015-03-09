@@ -1,0 +1,14 @@
+package views;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
+public class ValuesPanel extends JPanel {
+	private LabelTextField searchValues;
+	private JButton searchButton;
+	
+	public ValuesPanel(){
+		searchValues = new LabelTextField("Search: ", 50);
+		
+	}
+}

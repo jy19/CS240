@@ -1,0 +1,91 @@
+package server.database;
+import shared.model.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+public class RvalueDAO {
+
+	private Database db;
+	
+	RvalueDAO(Database db) {
+		this.setDb(db);
+	}
+	/**
+	 * use db's connection to query all record values in the table and return them
+	 * @return list of record values
+	 */
+	public ArrayList<Rvalue> getAll() {
+		return null;	
+	}
+	/**
+	 * use db's connection to add a new record value to the database
+	 * @param record value
+	 */
+	public int add(Rvalue value) {
+		int id = 0;
+		PreparedStatement pstmt = null; 
+		ResultSet rs = null;
+		Connection connection = null;
+		Statement stmt = null;
+		try{
+			String sql =  "INSERT INTO rvalues" +
+					"(row_num, field_id, project_id, rvalue)" +
+					"VALUES(?,?,?,?)";
+			connection = db.getConnection();
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setInt(1,  value.getRowNum());
+			pstmt.setInt(2,  value.getFieldID());
+			pstmt.setInt(3, value.getProjectID());
+			pstmt.setString(4, value.getValue());
+			
+			
+			if(pstmt.executeUpdate() == 1){
+				stmt = connection.createStatement();
+				rs = stmt.executeQuery("SELECT last_insert_rowid()");
+				rs.next();
+				id = rs.getInt(1);
+			}
+			else{
+				System.out.println("Adding failed");
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				if(pstmt != null) {pstmt.close();}
+				if(rs != null) {rs.close();}
+				if(stmt != null) {stmt.close();}
+			}
+			 catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return id;
+	}
+	/**
+	 * use db's connection to update record value info in database
+	 * @param record value
+	 */
+	public void update(Rvalue value) {
+
+	}
+	
+
+	public Database getDb() {
+		return db;
+	}
+
+	public void setDb(Database db) {
+		this.db = db;
+	}
+
+}

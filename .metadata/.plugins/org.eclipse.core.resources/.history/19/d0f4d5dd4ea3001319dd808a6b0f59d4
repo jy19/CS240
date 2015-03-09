@@ -1,0 +1,63 @@
+import java.util.HashSet;
+import java.util.Scanner;
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		try{
+			Scanner sc = new Scanner(System.in);
+			HashSet<String> matched = new HashSet<String>();
+			String inputword = sc.nextLine().toLowerCase();
+			int[] inputArray = createArray(inputword);
+			while(sc.hasNextLine()){
+				String current = sc.nextLine();
+				//System.out.println(current);
+				if(current.isEmpty()){
+					continue;
+				}
+				current = current.toLowerCase();
+				if(current.equals(inputword)){
+					continue;
+				}
+				else if(current.length() > inputword.length()){
+					continue;
+				}
+				else if(matched.contains(current)){
+					continue;
+				}
+				else{
+					int [] currArray = createArray(current);
+					if(isSubAnagram(inputArray, currArray)){
+						matched.add(current);
+					}
+				}
+			}
+			System.out.println(matched.size());
+			sc.close();
+		}
+		catch(Exception e){
+			System.out.println("exception???");
+		}
+		
+
+	}
+	
+	public static int[] createArray(String word){
+		int [] countArray = new int [26];
+		for(int i = 0; i < word.length(); i++){
+			countArray[word.charAt(i) - 'a']++;
+		}
+		return countArray;
+	}
+	
+	public static boolean isSubAnagram(int[] inputwordarr, int[] currentarr){
+		for(int i = 0; i < inputwordarr.length; i++){
+			if(inputwordarr[i] < currentarr[i]){
+				return false;
+			}
+		}
+		return true;
+	}
+
+}

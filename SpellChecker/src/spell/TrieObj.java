@@ -1,0 +1,181 @@
+package spell;
+
+import java.util.Iterator;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import spell.Trie.Node;
+
+public class TrieObj implements Trie {
+	
+	private int nodeCount;
+	private int wordCount;
+	private Node root;
+	private SortedSet<String> seenWords;
+	
+	public TrieObj(){
+		nodeCount = 1;
+		wordCount = 0;
+		root = new Node();
+		seenWords = new TreeSet<String> ();
+	}
+	/**
+	 * Adds the specified word to the trie (if necessary) and increments the word's frequency count
+	 * 
+	 * @param word The word being added to the trie
+	 */
+	public void add(String word) {
+		seenWords.add(word);
+		Node n = root;
+		for(int i = 0; i < word.length(); i++){
+			if(n.nodeArray[word.charAt(i) - 'a'] == null){
+				n.nodeArray[word.charAt(i) - 'a'] = new Node();
+				n.nodeArray[word.charAt(i) - 'a'].substrn = word.substring(0, i+1);
+				nodeCount++;
+				if(i == word.length()-1){
+					n.nodeArray[word.charAt(i) - 'a'].substrn = word.substring(0, i+1);
+					wordCount++;
+					n.nodeArray[word.charAt(i) - 'a'].frequency++;
+				}
+				n = n.nodeArray[word.charAt(i) - 'a'];
+			}
+			else{
+				if(i == word.length()-1){
+					n.nodeArray[word.charAt(i) - 'a'].frequency++;
+				}
+				else{
+					n = n.nodeArray[word.charAt(i) - 'a'];
+				}
+			}
+		}
+		
+	}
+	
+	/*public void rAdd(String word, int pos, Node n){
+		if(n.nodeArray[word.charAt(pos) - 'a'] == null){
+			n.nodeArray[word.charAt(pos) - 'a'] = new Node();
+			int tempos = pos;
+			n.substrn = word.substring(0, pos);
+			pos++;
+			nodeCount++;
+			if(pos == word.length()-1){
+				n.substrn = word.substring(0, pos);
+				wordCount++;
+				n.frequency++;
+				return;
+			}
+			rAdd(word, pos, n.nodeArray[word.charAt(tempos) - 'a']);
+		}
+		else{
+			pos++;
+			if(pos == word.length()){
+				n.frequency++;
+				return;
+			}
+			rAdd(word, pos, n);
+		}
+	}*/
+	
+	/**
+	 * Searches the trie for the specified word
+	 * 
+	 * @param word The word being searched for
+	 * 
+	 * @return A reference to the trie node that represents the word,
+	 * 			or null if the word is not in the trie
+	 */
+	public Node find(String word) {
+		Node n = root;
+		for(int i = 0; i < word.length(); i++){
+			if(n.nodeArray[word.charAt(i) - 'a'] == null){
+				return null;
+			}
+			else{
+				if(i == word.length()-1){
+					if(n.nodeArray[word.charAt(i) - 'a'].frequency > 0){
+						return n.nodeArray[word.charAt(i) - 'a'];
+					}
+					else{
+						return null;
+					}
+				}
+				n = n.nodeArray[word.charAt(i) - 'a'];
+			}
+		}
+		return null;
+	}
+	
+	
+	/**
+	 * Returns the number of unique words in the trie
+	 * 
+	 * @return The number of unique words in the trie
+	 */
+	public int getWordCount() {
+		return wordCount;
+	}
+	
+	/**
+	 * Returns the number of nodes in the trie
+	 * 
+	 * @return The number of nodes in the trie
+	 */
+	public int getNodeCount() {
+		return nodeCount;
+	}
+	
+	public int hashCode(){
+		return nodeCount * 11 + wordCount * 19;
+	}
+	
+	/**
+	 * The toString specification is as follows:
+	 * For each word, in alphabetical order:
+	 * <word> <count>\n
+	 */
+	@Override
+	public String toString() {
+		/*Iterator it = seenWords.iterator();
+		String result = "";
+		while(it.hasNext()){
+			String word = (String) it.next();
+			Node n = find(word);
+			result += word + " " + n.frequency + "\n";
+		}*/
+		String result = "";
+		for(String word : seenWords){
+			Node n = find(word);
+			result += word + " " + n.frequency + "\n";
+		}
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object t) {
+		if(t == null){
+			return false;
+		}
+		else if(this.getClass() != t.getClass()){
+			return false;
+		}
+		else{
+			TrieObj temp = (TrieObj) t;
+			if(this.toString().equals(temp.toString())){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+	}
+	
+	public class Node implements Trie.Node{
+		int frequency;
+		String substrn;
+		Node[] nodeArray = new Node[26];
+		public int getValue() {
+			return frequency;
+		}
+	}
+}

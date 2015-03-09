@@ -1,0 +1,132 @@
+package views;
+
+import static servertester.views.Constants.TRIPLE_HSPACE;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import shared.communication.GetProjectsIn;
+import shared.communication.GetProjectsOut;
+import shared.communication.ValidateUserIn;
+import shared.communication.ValidateUserOut;
+import client.communication.ClientCommunicator;
+
+@SuppressWarnings("serial")
+public class SearchGUI extends JFrame{
+	private FieldsPanel fields;
+	private LoginPanel loginInfo;
+	private HostportPanel hostport;
+	private ImagePanel sampleImage;
+	private ProjectsPanel projects;
+	private ValuesPanel values;
+	private JButton loginButton;
+	private boolean validated;
+	private ClientCommunicator communicator = new ClientCommunicator();
+	
+	public SearchGUI(String title){
+		super(title);
+		
+		createComponents();
+	}
+	
+	
+	
+	private void createComponents(){
+		addWindowListener(windowAdapter);
+		
+		hostport = new HostportPanel();
+		loginInfo = new LoginPanel(communicator);
+		loginButton = new JButton("Log In");
+
+		JPanel topPanel = new JPanel();
+		topPanel.setLayout(new BorderLayout());
+		topPanel.add(hostport, BorderLayout.NORTH);
+		topPanel.add(loginInfo, BorderLayout.CENTER);
+		
+//		communicator.getHostPort(hostport.getHost(), hostport.getPort());
+//		GetProjectsIn inputProjects = new GetProjectsIn(loginInfo.getUsername(), loginInfo.getPassword());
+//		GetProjectsOut outputProjects = communicator.getProject(inputProjects);
+		
+		projects = new ProjectsPanel();
+		
+		JPanel middlePanel = new JPanel();
+		middlePanel.setLayout(new BorderLayout());
+		middlePanel.add(projects, BorderLayout.CENTER);
+		
+		values = new ValuesPanel();
+		sampleImage = new ImagePanel();
+		
+		JPanel bottomLeftPanel = new JPanel();
+		bottomLeftPanel.setLayout(new BorderLayout());
+		bottomLeftPanel.add(values, BorderLayout.NORTH);
+		bottomLeftPanel.add(sampleImage, BorderLayout.SOUTH);
+		
+		fields = new FieldsPanel();
+		
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.setLayout(new BorderLayout());
+		bottomPanel.add(fields, BorderLayout.WEST);
+		bottomPanel.add(bottomLeftPanel, BorderLayout.EAST);
+		
+		JPanel basePanel = new JPanel();
+		basePanel.setLayout(new BoxLayout(basePanel, BoxLayout.Y_AXIS));
+		basePanel.add(topPanel);
+		basePanel.add(middlePanel);
+		basePanel.add(bottomPanel);
+		
+		this.add(basePanel);
+		
+	}
+	
+	private ActionListener actionListener = new ActionListener(){
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			ValidateUserIn input = new ValidateUserIn(loginInfo.getUsername(), loginInfo.getPassword());
+			ValidateUserOut output = communicator.validateUser(input);
+			
+			if(!output.isApproved()){
+				validated = false;
+			}
+			else{
+				validated = true;
+			}
+
+		}
+		
+	};
+	
+	private WindowAdapter windowAdapter = new WindowAdapter() {
+	    	
+        public void windowClosing(WindowEvent e) {
+            System.exit(0);
+        }
+	};
+	public static void main(String[] args) {
+    	
+		
+        EventQueue.invokeLater(new Runnable()
+        {
+           public void run()
+           {
+               SearchGUI frame = new SearchGUI("Search");
+               frame.pack();
+               frame.setSize(500, 500);
+               frame.setVisible(true);
+           }
+        });
+    }
+	
+}

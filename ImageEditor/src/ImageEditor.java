@@ -1,0 +1,31 @@
+import java.io.*;
+import java.util.*;
+
+
+public class ImageEditor {
+
+	public static void main(String[] args){
+	
+		try{
+		File input = new File(args[0]);
+		File output = new File(args[1]);
+		String transtype = new String (args[2]);
+		String blurnum = null;
+
+		if(transtype.equals("motionblur") && args.length >= 4){
+			blurnum = new String(args[3]);
+			GetImage image = new GetImage(input, output, transtype, blurnum);
+			image.copy();
+		}
+		else if(!transtype.equals("motionblur") && args.length >= 3){
+			GetImage image = new GetImage(input, output, transtype, blurnum);
+			image.copy();
+		}
+		else{
+			System.out.println("USAGE: java ImageEditor input-file output-file (invert|grayscale|emboss|motionblur motion-blur-length)");
+		}
+		}catch(Exception e){System.out.println("USAGE: java ImageEditor input-file output-file (invert|grayscale|emboss|motionblur motion-blur-length)");e.printStackTrace();}
+	}
+
+}
+

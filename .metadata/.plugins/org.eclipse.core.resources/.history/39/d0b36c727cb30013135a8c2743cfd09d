@@ -1,0 +1,20 @@
+package views;
+
+import java.awt.BorderLayout;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
+public class ValuesPanel extends JPanel {
+	private LabelTextField searchValues;
+	private JButton searchButton;
+	
+	public ValuesPanel(){
+		searchValues = new LabelTextField("Search: ", 50);
+		searchButton = new JButton();
+		
+		this.setLayout(new BorderLayout());
+		this.add(searchValues, BorderLayout.CENTER);
+		this.add(searchButton, BorderLayout.EAST);
+	}
+}

@@ -1,0 +1,40 @@
+package views;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+public class HostportPanel extends JPanel{
+	private LabelTextField hostPanel;
+	private LabelTextField portPanel;
+	
+	public HostportPanel(){
+		hostPanel = new LabelTextField("Host: ");
+		portPanel = new LabelTextField("Port: ");
+		
+		this.setLayout(new BorderLayout());
+		this.add(hostPanel, BorderLayout.WEST);
+		this.add(portPanel, BorderLayout.EAST);
+		
+	}
+	
+	public String getHost(){
+		return hostPanel.getText();
+	}
+	public String getPort(){
+		return portPanel.getText();
+	}
+	
+	private ActionListener listener = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+		}  	
+    };
+}

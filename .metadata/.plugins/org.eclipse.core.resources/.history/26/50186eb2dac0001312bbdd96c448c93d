@@ -1,0 +1,240 @@
+package client.views.states;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
+
+import javax.imageio.ImageIO;
+
+import shared.model.Field;
+import shared.model.Project;
+import shared.communication.*;
+import client.checker.Checker;
+import client.communication.ClientCommunicator;
+import client.views.Cell;
+import client.views.InfoManager;
+
+public class BatchState {
+	//have a batch state listener interface
+	//make batch listener, everything is listening to batch state
+	//if something changes, everything connected to batch state is notified
+	//every method in listener has to be override-ed in other classes, but doesn't have to do anything
+	//possible methods in listener: updatebatch, batch submitted, cell selected, etc. 
+	private static BatchState batchState = new BatchState();
+	private ClientCommunicator communicator = ClientCommunicator.getCommunicator();
+	private InfoManager infoManager = InfoManager.getInfo();
+	
+	private String[][] values; //remember to initialize to empty string; or it'll be null and have problems
+	private Cell selectedCell;
+	private ArrayList<BatchStateListener> bsListeners;
+	
+	//maybe need list of cells that are misspelled?
+	private ArrayList<Cell> errorCells;
+	
+	private DownloadBatchOut batchOutput;
+	
+	BufferedImage image;
+	private ArrayList<Field> fieldsofBatch;
+	private Project currProject;
+	private int imageID;
+	
+	
+	public BatchState(){
+		bsListeners = new ArrayList<BatchStateListener>();
+		errorCells = new ArrayList<Cell>();
+		image = null;
+		fieldsofBatch = new ArrayList<Field>();
+		
+		selectedCell = new Cell(0, 0);
+	}
+	
+	public static BatchState getBatchState(){
+		return batchState;
+	}
+	
+	public void addBatchStateListener(BatchStateListener bsl){
+		bsListeners.add(bsl);
+	}
+	
+	
+	//have a add listener method to add bsl to list -- add itself when it's created.
+	//has download batch method which initializes everything; at the end, notify all listeners that batch has been downloaded
+//	public void initDownloadBatch(BufferedImage bImage, ArrayList<Field> inFields){
+//		//image = ImageIO.read(imageURL);
+//		image = bImage;
+//		fieldsofBatch = inFields;
+//		values = new String[currProject.getRecordsperimage()][fieldsofBatch.size() + 1];
+//		for(int i = 0; i < currProject.getRecordsperimage(); i++){
+//			values[i][0] = String.valueOf(i + 1);
+//		}
+//		
+//		for(BatchStateListener bsl : bsListeners){
+//			bsl.batchDownloaded(true);
+//		}
+//	}
+	
+	public void initDownloadBatch(){
+		String imageURLtemp = communicator.getURLPrefix() + "//" + batchOutput.getImage().getFile();
+		imageURLtemp = imageURLtemp.replace("\\", "/");
+		try {
+			URL imageURL = new URL(imageURLtemp);
+			image = ImageIO.read(imageURL);
+			
+			values = new String[currProject.getRecordsperimage()][fieldsofBatch.size() + 1];
+			for(int i = 0; i < currProject.getRecordsperimage(); i++){
+				values[i][0] = String.valueOf(i + 1);
+			}
+			
+			for(BatchStateListener bsl : bsListeners){
+				bsl.batchDownloaded(true);
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void submitBatch(){
+		
+		ArrayList<String> inputValues = new ArrayList<String>();
+		
+		for(int i = 0; i < values.length; i++){
+			for(int j = 1; j < values[0].length; j++){
+				if(values[i][j] == null){
+					values[i][j] = "";
+				}
+				inputValues.add(values[i][j]);
+			}
+		}
+		
+		SubmitBatchIn input = new SubmitBatchIn(infoManager.getUsername(), infoManager.getPassword(), imageID, inputValues);
+		SubmitBatchOut output = communicator.submitBatch(input);
+		
+		if(output != null){
+			
+			for(BatchStateListener bsl : bsListeners){
+				bsl.batchSubmitted(true);
+			}
+		}
+		else{
+			System.out.println("submit failed");
+		}
+	}
+	
+	public void setProject(Project project){
+		currProject = project;
+	}
+	
+	public Project getProject(){
+		return currProject;
+	}
+	
+	public void setImageID(int idImage){
+		imageID = idImage;
+	}
+	
+	public ArrayList<Field> getFields(){
+		return fieldsofBatch;
+	}
+	
+	public void setFields(ArrayList<Field> inFields){
+		fieldsofBatch = inFields;
+	}
+	
+	public BufferedImage getImage(){
+		return image;
+	}
+	
+	public void setImage(BufferedImage currImage){
+		image = currImage;
+	}
+	
+	public DownloadBatchOut getBatchOutput() {
+		return batchOutput;
+	}
+
+	public void setBatchOutput(DownloadBatchOut batchOutput) {
+		this.batchOutput = batchOutput;
+	}
+
+	public ArrayList<Cell> getErrors(){
+		return errorCells;
+	}
+	
+	public void setErrors(ArrayList<Cell> currErrors){
+		errorCells = currErrors;
+	}
+	
+	public String[][] getValues(){
+		return values;
+	}
+	
+	public void setValues(String [][] savedValues){
+		values = savedValues;
+	}
+	
+	public void setValue(Cell cell, String value){
+		values[cell.getRecord()][cell.getField()] = value;
+		
+		Checker spellChecker = new Checker();
+		if(fieldsofBatch.get(cell.getField()-1).getKnowndata() != null && !fieldsofBatch.get(cell.getField()-1).getKnowndata().isEmpty()){
+			try {
+				File dictionaryFile = new File(fieldsofBatch.get(cell.getField()-1).getKnowndata());
+				spellChecker.useDictionary(dictionaryFile);
+				
+				Set<String> suggestions = spellChecker.getSuggestions(value);
+				
+				if(suggestions.size() == 1 && suggestions.iterator().next().equals(value.toUpperCase())){
+					if(errorCells.contains(cell)){
+						errorCells.remove(cell);
+					}
+				}
+				else if(value.isEmpty()){
+					System.out.println("empty");
+				}
+				else{
+					errorCells.add(cell);
+				}
+				
+			} 
+			catch (IOException e) {
+				System.out.println("known data file is bad");
+				e.printStackTrace();
+			}
+		}
+		
+		
+		for(BatchStateListener bsl : bsListeners){
+			bsl.valueChanged(cell, value);
+		}
+
+	}
+	
+	public String getValue(Cell cell){
+		if(values[cell.getRecord()][cell.getField()] == null){
+			values[cell.getRecord()][cell.getField()] = "";
+		}
+		
+		return values[cell.getRecord()][cell.getField()];
+		
+	}
+	
+	public void setSelectedCell(Cell sCell){
+		selectedCell = sCell;
+		
+		for(BatchStateListener bsl : bsListeners){
+			bsl.selectedCellChanged(sCell);
+		}
+		
+	}
+	
+	public Cell getSelectedCell(){
+		return selectedCell;
+	}
+}

@@ -1,0 +1,40 @@
+import java.io.*;
+import java.util.*;
+
+
+public class ImageEditor {
+
+	public static void main(String[] args) throws FileNotFoundException {
+		File srcfile = new File(args[0]);
+		File destfile = new File(args[1]);
+		
+		GetImage image = new GetImage(srcfile, destfile);
+		image.copy();
+		
+	}
+
+}
+
+class GetImage{
+	
+	private File srcfile;
+	private File destfile;
+	
+	public GetImage(File srcfile, File destfile){
+		this.srcfile = srcfile;
+		this.destfile = destfile;
+	}
+	
+	public void copy() throws FileNotFoundException{
+		Scanner scanner = new Scanner(srcfile);
+		PrintWriter writer = new PrintWriter(destfile);
+		
+		while(scanner.hasNextLine()){
+			String line = scanner.nextLine();
+			writer.println(line);
+		}
+		
+		scanner.close();
+		writer.close();
+	}
+}

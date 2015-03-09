@@ -1,0 +1,3 @@
+1393370634475	Rename package 'parsing'
+1393376656703	Encapsulate field 'projectDAO'
+1393377938275	Encapsulate field 'userID'

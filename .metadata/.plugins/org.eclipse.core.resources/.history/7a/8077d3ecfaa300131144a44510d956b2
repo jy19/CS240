@@ -1,0 +1,94 @@
+package server.database;
+import shared.model.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+public class ImageDAO {
+
+	private Database db;
+	
+	ImageDAO(Database db) {
+		this.setDb(db);
+	}
+	public ArrayList<Image> getImagesbyProjectID(int ProjectID){
+		return null;
+	}
+	/**
+	 * use db's connection to query all images and return them
+	 * @return list of images
+	 */
+	public ArrayList<Image> getAll() {
+		return null;	
+	}
+	/**
+	 * use db's connection to add a new image to the database
+	 * @param image
+	 */
+	public int add(Image image) {
+		int id = 0;
+		PreparedStatement pstmt = null; 
+		ResultSet rs = null;
+		Connection connection = null;
+		Statement stmt = null;
+		try{
+			String sql =  "INSERT INTO images" +
+					"(file, project_id, current_state, user_id)" +
+					"VALUES(?,?,?,?)";
+			connection = db.getConnection();
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setString(1,  image.getFile());
+			pstmt.setInt(2,  image.getProjectID());
+			pstmt.setInt(3, image.getCurrentState());
+			pstmt.setInt(4, image.getUserID());
+			
+			
+			if(pstmt.executeUpdate() == 1){
+				stmt = connection.createStatement();
+				rs = stmt.executeQuery("SELECT last_insert_rowid()");
+				rs.next();
+				id = rs.getInt(1);
+			}
+			else{
+				System.out.println("Adding failed");
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				if(pstmt != null) {pstmt.close();}
+				if(rs != null) {rs.close();}
+				if(stmt != null) {stmt.close();}
+			}
+			 catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return id;
+	}
+	/**
+	 * use db's connection to update image info in database
+	 * @param image
+	 */
+	public void update(Image image) {
+
+	}
+	
+
+	public Database getDb() {
+		return db;
+	}
+
+	public void setDb(Database db) {
+		this.db = db;
+	}
+
+}

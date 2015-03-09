@@ -1,0 +1,137 @@
+import java.io.*;
+import java.util.*;
+
+
+public class ImageEditor {
+
+	public static void main(String[] args) throws FileNotFoundException {
+		File input = new File(args[0]);
+		File output = new File(args[1]);
+		String transtype = args[2];
+		
+		GetImage image = new GetImage(input, output, transtype);
+		image.copy();
+		
+	}
+
+}
+
+class GetImage{
+	
+	private File input;
+	private File output;
+	private String transtype;
+	
+	public GetImage(File input, File output, String transtype){
+		this.input = input;
+		this.output = output;
+		this.transtype = transtype;
+	}
+	
+	public void copy() throws FileNotFoundException{
+		Scanner scanner = new Scanner(input).useDelimiter("(\\s)|(#[^\\n]*\\n)+");
+		PrintWriter writer = new PrintWriter(output);
+		
+		String p3 = scanner.next();
+		String comment = scanner.next();
+		int width = scanner.nextInt();
+		int height = scanner.nextInt();
+		int maxvalue = scanner.nextInt();
+		
+		Pixel[][] imageArray = new Pixel[width][height];
+		
+		for(int i = 0; i < width; i++){
+			for(int j = 0; j < height; j++){
+				Pixel p = new Pixel(scanner.nextInt(), scanner.nextInt(), scanner.nextInt());
+				imageArray[i][j] = p;
+			}
+		}
+		
+		printGrid(width, height, imageArray);
+		
+		alter();
+		
+		scanner.close();
+		writer.close();
+	}
+	
+	public void alter(){
+		switch(transtype.toLowerCase()){
+		case "invert":
+			invert();
+			break;
+		case "grayscale":
+			grayscale();
+			break;
+		case "emboss":
+			emboss();
+			break;
+		case "motionblur":
+			motionblur();
+			break;
+		}
+	}
+	
+	public void invert() {
+			
+		}
+		public void grayscale() {
+			
+		}
+	
+		public void emboss() {
+			
+		}
+		public void motionblur() {
+			
+		}
+	
+	public void printGrid(int width, int height, Pixel[][] imageArray){
+		   for(int i = 0; i < width; i++)
+		   {
+		      for(int j = 0; j < height; j++)
+		      {
+		         System.out.printf("%d",imageArray[i][j].getRed());
+		      }
+		      System.out.println();
+		   }
+	}
+}
+
+
+class Pixel{
+	private int red;
+	private int green;
+	private int blue;
+	
+	public Pixel(int red, int green, int blue){
+		this.setRed(red);
+		this.setGreen(green);
+		this.setBlue(blue);
+	}
+
+	public int getRed() {
+		return red;
+	}
+
+	public void setRed(int red) {
+		this.red = red;
+	}
+
+	public int getGreen() {
+		return green;
+	}
+
+	public void setGreen(int green) {
+		this.green = green;
+	}
+
+	public int getBlue() {
+		return blue;
+	}
+
+	public void setBlue(int blue) {
+		this.blue = blue;
+	}
+	
+}
